@@ -42,7 +42,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </div>
 
         <div
-          className="card"
+          className="card markdown-body"
           style={{ padding: "24px", lineHeight: "1.8" }}
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />

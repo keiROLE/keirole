@@ -15,6 +15,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
   const [laps, setLaps] = useState<number[]>([]);
   const startTimeRef = useRef(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hasStartedRef = useRef(false);
 
   const tick = useCallback(() => {
     setElapsed(Date.now() - startTimeRef.current);
@@ -22,7 +23,12 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
 
   const handleStart = () => {
     if (!running) {
-      startTimeRef.current = Date.now() - elapsed;
+      if (!hasStartedRef.current) {
+        startTimeRef.current = Date.now();
+        hasStartedRef.current = true;
+      } else {
+        startTimeRef.current = Date.now() - elapsed;
+      }
       intervalRef.current = setInterval(tick, 50);
       setRunning(true);
     }
@@ -40,6 +46,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
     setRunning(false);
     setElapsed(0);
     setLaps([]);
+    hasStartedRef.current = false;
   };
 
   const handleLap = () => {
@@ -52,7 +59,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
     };
   }, []);
 
-  // Reset state when dialog closes
+  // Reset state when dialog opens/closes
   useEffect(() => {
     if (!open) {
       handleReset();
@@ -74,7 +81,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
     <AnimatePresence>
       {open && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop — full viewport */}
           <motion.div
             className="fixed inset-0 z-40"
             style={{ background: "rgba(0,0,0,0.6)" }}
@@ -84,7 +91,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
             onClick={onClose}
           />
 
-          {/* Dialog */}
+          {/* Dialog — truly centered in viewport */}
           <motion.div
             className="fixed z-50"
             style={{
@@ -93,17 +100,21 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
               transform: "translate(-50%, -50%)",
               width: "420px",
               maxWidth: "calc(100vw - 32px)",
+              margin: 0,
+              padding: 0,
             }}
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 30, scale: 0.95 }}
-            transition={{ duration: 0.2 }}
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.92 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
           >
             <div
-              className="rounded-2xl p-6"
+              className="rounded-2xl"
               style={{
                 background: "var(--bg-card)",
                 border: "1px solid var(--border)",
+                borderRadius: "16px",
+                padding: "24px",
               }}
             >
               {/* Header */}
@@ -216,7 +227,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
                     cursor: running ? "pointer" : "default",
                   }}
                 >
-                  <Flag size={14} /> 计圈
+                  <Flag size={14} /> 记录
                 </button>
                 <button
                   onClick={handleReset}
@@ -237,7 +248,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
                 </button>
               </div>
 
-              {/* Laps */}
+              {/* Lap records */}
               {laps.length > 0 && (
                 <div
                   style={{
@@ -265,7 +276,7 @@ export default function StopwatchDialog({ open, onClose }: StopwatchDialogProps)
                             color: "var(--text-secondary)",
                           }}
                         >
-                          <span>第 {lapNum} 圈</span>
+                          <span>第 {lapNum} 条</span>
                           <span style={{ fontFamily: "'Courier New', monospace" }}>
                             +{formatLapTime(lapTime, prevTime)}
                           </span>
