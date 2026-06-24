@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "hello-world",
+    "title": "欢迎来到 keiROLE",
+    "date": "2026-06-24",
+    "category": "随笔"
+  },
+  {
+    "slug": "site-rebuild",
+    "title": "个人站重建日志",
+    "date": "2026-06-24",
+    "category": "技术"
+  },
+  {
+    "slug": "music-rec-2026",
+    "title": "2026 年值得听的歌",
+    "date": "2026-06-20",
+    "category": "音乐"
+  }
+]
