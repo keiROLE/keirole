@@ -25,7 +25,11 @@ const contacts = [
   },
 ];
 
-export default function ContactCard() {
+interface ContactCardProps {
+  compact?: boolean;
+}
+
+export default function ContactCard({ compact }: ContactCardProps) {
   const [copied, setCopied] = useState(false);
 
   const handleClick = (item: (typeof contacts)[0]) => {
@@ -38,6 +42,63 @@ export default function ContactCard() {
       window.open(item.href, "_blank");
     }
   };
+
+  if (compact) {
+    return (
+      <motion.div
+        className="card"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+      >
+        <div style={{ fontSize: "13px", fontWeight: "bold", color: "var(--accent)", marginBottom: "8px" }}>
+          联系我
+        </div>
+
+        <div style={{ display: "flex", gap: "6px" }}>
+          {contacts.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.label}
+                onClick={() => handleClick(item)}
+                title={item.label}
+                style={{
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: "4px",
+                  padding: "8px 4px",
+                  borderRadius: "10px",
+                  border: "1px solid var(--border)",
+                  background: "transparent",
+                  color: "var(--text-primary)",
+                  cursor: "pointer",
+                  fontSize: "10px",
+                  transition: "all 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = "var(--accent)";
+                  e.currentTarget.style.background = "var(--accent-dim)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = "var(--border)";
+                  e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <Icon size={16} style={{ color: "var(--accent)" }} />
+                <span>
+                  {item.label}
+                  {item.label === "Email" && copied ? " ✓" : ""}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

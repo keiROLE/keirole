@@ -1,4 +1,4 @@
-import Link from "next/link";
+import ContactCard from "@/components/home/ContactCard";
 
 export default function AboutPage() {
   return (
@@ -63,28 +63,7 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <div className="card">
-        <div style={{ fontSize: "16px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
-          联系方式
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <Link
-              href="https://github.com/keiROLE"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "var(--text-primary)" }}
-            >
-              GitHub →
-            </Link>
-            <span style={{ color: "var(--text-secondary)" }}>/keiROLE</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <span style={{ color: "var(--text-primary)" }}>Email:</span>
-            <span style={{ color: "var(--text-secondary)" }}>q_rolehhh@outlook.com</span>
-          </div>
-        </div>
-      </div>
+      <ContactCard />
     </div>
   );
 }

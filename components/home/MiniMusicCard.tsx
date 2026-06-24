@@ -4,7 +4,11 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { Play, Pause, RotateCcw } from "lucide-react";
 
-export default function MiniMusicCard() {
+interface MiniMusicCardProps {
+  compact?: boolean;
+}
+
+export default function MiniMusicCard({ compact }: MiniMusicCardProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
   const controls = useAnimation();
@@ -19,7 +23,7 @@ export default function MiniMusicCard() {
       try {
         await audio.play();
       } catch {
-        // Autoplay blocked — user interaction needed
+        // Autoplay blocked
       }
     }
     setPlaying(!playing);
@@ -33,7 +37,6 @@ export default function MiniMusicCard() {
     setPlaying(false);
   };
 
-  // Sync playing state with audio element
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -49,7 +52,6 @@ export default function MiniMusicCard() {
     };
   }, []);
 
-  // Rotation animation while playing
   useEffect(() => {
     if (playing) {
       controls.start({ rotate: 360, transition: { repeat: Infinity, duration: 3, ease: "linear" } });
@@ -61,45 +63,51 @@ export default function MiniMusicCard() {
 
   return (
     <motion.div
-      className="card flex items-center gap-4"
+      className="card"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.6 }}
     >
       {/* Rotating disc */}
       <motion.div
-        className="w-16 h-16 rounded-full flex items-center justify-center"
+        className="w-16 h-16 rounded-full flex items-center justify-center mx-auto"
         style={{
+          width: compact ? "48px" : "64px",
+          height: compact ? "48px" : "64px",
           background: "conic-gradient(var(--accent-dim), var(--accent), var(--accent-dim), var(--accent))",
         }}
         animate={controls}
       >
         <div
-          className="w-8 h-8 rounded-full"
-          style={{ background: "var(--bg-card)" }}
+          className="rounded-full"
+          style={{
+            width: compact ? "24px" : "32px",
+            height: compact ? "24px" : "32px",
+            background: "var(--bg-card)",
+          }}
         />
       </motion.div>
 
       {/* Info */}
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "14px", fontWeight: "bold", color: "var(--text-primary)" }}>
+      <div style={{ textAlign: "center", marginTop: "12px" }}>
+        <div style={{ fontSize: compact ? "12px" : "14px", fontWeight: "bold", color: "var(--text-primary)" }}>
           おかえりなさい
         </div>
-        <div style={{ fontSize: "12px", color: "var(--text-secondary)" }}>
+        <div style={{ fontSize: compact ? "10px" : "12px", color: "var(--text-secondary)" }}>
           柴田淳
         </div>
       </div>
 
       {/* Controls */}
-      <div style={{ display: "flex", gap: "8px" }}>
+      <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "12px" }}>
         <button
           onClick={togglePlay}
           style={{
             background: "transparent",
             border: "1px solid var(--border)",
             borderRadius: "50%",
-            width: "36px",
-            height: "36px",
+            width: compact ? "32px" : "36px",
+            height: compact ? "32px" : "36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -116,7 +124,7 @@ export default function MiniMusicCard() {
             e.currentTarget.style.borderColor = "var(--border)";
           }}
         >
-          {playing ? <Pause size={16} /> : <Play size={16} />}
+          {playing ? <Pause size={compact ? 14 : 16} /> : <Play size={compact ? 14 : 16} />}
         </button>
         <button
           onClick={reset}
@@ -125,8 +133,8 @@ export default function MiniMusicCard() {
             background: "transparent",
             border: "1px solid var(--border)",
             borderRadius: "50%",
-            width: "36px",
-            height: "36px",
+            width: compact ? "32px" : "36px",
+            height: compact ? "32px" : "36px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -143,7 +151,7 @@ export default function MiniMusicCard() {
             e.currentTarget.style.borderColor = "var(--border)";
           }}
         >
-          <RotateCcw size={14} />
+          <RotateCcw size={compact ? 12 : 14} />
         </button>
       </div>
 
