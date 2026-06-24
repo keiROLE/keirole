@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import Link from "next/link";
+import PageTransition from "@/components/PageTransition";
 
 const postsDir = path.join(process.cwd(), "data/blogs/posts");
 
@@ -35,8 +36,9 @@ function getAllPosts(): BlogPost[] {
 export default function BlogPage() {
   const posts = getAllPosts();
   const categories = [...new Set(posts.map((p) => p.category))];
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <PageTransition>
       <h1 style={{ color: "var(--accent)", fontSize: "24px", fontWeight: "bold" }}>
         近期文章
       </h1>
@@ -113,6 +115,6 @@ export default function BlogPage() {
           暂无文章。
         </p>
       )}
-    </div>
+    </PageTransition>
   );
 }

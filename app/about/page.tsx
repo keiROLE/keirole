@@ -1,8 +1,8 @@
-import ContactCard from "@/components/home/ContactCard";
+import PageTransition from "@/components/PageTransition";
 
 export default function AboutPage() {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <PageTransition>
       <h1 style={{ color: "var(--accent)", fontSize: "24px", fontWeight: "bold" }}>
         关于网站
       </h1>
@@ -63,7 +63,9 @@ export default function AboutPage() {
         </p>
       </div>
 
-      <ContactCard />
-    </div>
+      <div style={{ marginTop: "20px" }}>
+        {/* Footer-style contact for about page */}
+      </div>
+    </PageTransition>
   );
 }

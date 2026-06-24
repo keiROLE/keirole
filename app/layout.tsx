@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
+import MiniMusicCard from "@/components/home/MiniMusicCard";
+import ContactCard from "@/components/home/ContactCard";
 
 export const metadata: Metadata = {
   title: "keiROLE",
@@ -18,8 +20,20 @@ export default function RootLayout({
       <body className="min-h-screen">
         <Sidebar />
         <main className="ml-[272px] p-8">
-          {children}
-          <Footer />
+          <div style={{ display: "flex", gap: "20px" }}>
+            <div style={{ flex: 1 }}>
+              {children}
+              <Footer />
+            </div>
+
+            {/* Right sidebar: always visible on every page */}
+            <div style={{ width: "200px", flexShrink: 0 }}>
+              <MiniMusicCard />
+              <div style={{ marginTop: "20px" }}>
+                <ContactCard compact />
+              </div>
+            </div>
+          </div>
         </main>
       </body>
     </html>

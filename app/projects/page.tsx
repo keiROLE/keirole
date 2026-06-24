@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import PageTransition from "@/components/PageTransition";
 
 const projectsDir = path.join(process.cwd(), "data/projects");
 
@@ -36,7 +37,7 @@ export default function ProjectsPage() {
   const projects = getAllProjects();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <PageTransition>
       <h1 style={{ color: "var(--accent)", fontSize: "24px", fontWeight: "bold" }}>
         我的项目
       </h1>
@@ -94,6 +95,6 @@ export default function ProjectsPage() {
           </a>
         ))}
       </div>
-    </div>
+    </PageTransition>
   );
 }

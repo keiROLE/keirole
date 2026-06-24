@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import PageTransition from "@/components/PageTransition";
 
 const sharesDir = path.join(process.cwd(), "data/shares");
 
@@ -45,7 +46,7 @@ export default function SharePage() {
   const shares = getAllShares();
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <PageTransition>
       <h1 style={{ color: "var(--accent)", fontSize: "24px", fontWeight: "bold" }}>
         推荐分享
       </h1>
@@ -73,6 +74,6 @@ export default function SharePage() {
           </div>
         ))}
       </div>
-    </div>
+    </PageTransition>
   );
 }

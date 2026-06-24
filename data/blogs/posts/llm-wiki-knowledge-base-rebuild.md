@@ -1,6 +1,7 @@
 ---
 title: "我如何用 LLM Wiki 思想重构个人知识库"
 date: "2026-06-24"
+category: "技术"
 tag: "随笔"
 ---
 
