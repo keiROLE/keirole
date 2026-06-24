@@ -1,12 +1,122 @@
 "use client";
 
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useRef, useEffect, useCallback, useState, createContext, useContext, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, Pause, RotateCcw, Flag, X } from "lucide-react";
+import { X, Play, Pause, RotateCcw, Flag } from "lucide-react";
 
 /**
- * Shared styles for dialog buttons
+ * DialogContext — manages a single open dialog at a time.
+ * All dialogs render centered in the main content area using fixed positioning
+ * that spans the content zone (left: 272px, right: 200px, top/bottom: 32px).
  */
+interface DialogInfo {
+  title: string;
+  content: ReactNode;
+}
+
+const DialogContext = createContext<{
+  openDialog: (title: string, content: ReactNode) => void;
+  closeDialog: () => void;
+} | null>(null);
+
+export function useDialog() {
+  const ctx = useContext(DialogContext);
+  if (!ctx) throw new Error("useDialog must be inside DialogProvider");
+  return ctx;
+}
+
+export function DialogProvider({ children }: { children: ReactNode }) {
+  const [dialog, setDialog] = useState<DialogInfo | null>(null);
+
+  const openDialog = useCallback((title: string, content: ReactNode) => {
+    setDialog({ title, content });
+  }, []);
+
+  const closeDialog = useCallback(() => {
+    setDialog(null);
+  }, []);
+
+  return (
+    <DialogContext.Provider value={{ openDialog, closeDialog }}>
+      {children}
+      <AnimatePresence>
+        {dialog && (
+          <>
+            {/* Backdrop — full viewport */}
+            <motion.div
+              className="fixed inset-0 z-40"
+              style={{ background: "rgba(0,0,0,0.6)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={closeDialog}
+            />
+
+            {/* Dialog — centered in the main content area */}
+            <motion.div
+              className="fixed z-50"
+              style={{
+                top: "32px",
+                left: "272px",
+                right: "200px",
+                bottom: "32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                pointerEvents: "none",
+              }}
+            >
+              <motion.div
+                style={{
+                  width: "480px",
+                  maxWidth: "100%",
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "16px",
+                  padding: "24px",
+                  pointerEvents: "auto",
+                }}
+                initial={{ opacity: 0, scale: 0.92 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.92 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+              >
+                {/* Header */}
+                <div style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  marginBottom: "20px",
+                }}>
+                  <div style={{ fontSize: "16px", fontWeight: "bold", color: "var(--accent)" }}>
+                    {dialog.title}
+                  </div>
+                  <button
+                    onClick={closeDialog}
+                    style={{
+                      background: "transparent", border: "none", cursor: "pointer",
+                      color: "var(--text-secondary)", padding: "4px", borderRadius: "8px",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      transition: "color 0.2s",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+
+                {/* Body */}
+                {dialog.content}
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </DialogContext.Provider>
+  );
+}
+
+// ===== Stopwatch body (rendered inside the dialog) =====
+
 const btnPrimary: React.CSSProperties = {
   display: "flex", alignItems: "center", gap: "6px",
   padding: "8px 20px", borderRadius: "12px", border: "none",
@@ -26,119 +136,35 @@ const btnOutline: React.CSSProperties = {
   color: "var(--text-primary)", fontSize: "13px", cursor: "pointer",
 };
 
-/**
- * CenteredDialog — reusable popup centered in the main content area
- * (between the 272px left sidebar and 200px right sidebar).
- */
-export function CenteredDialog({ open, onClose, title, children }: {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}) {
-  if (!open) return null;
-
-  return (
-    <>
-      <motion.div
-        className="fixed inset-0 z-40"
-        style={{ background: "rgba(0,0,0,0.6)" }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={onClose}
-      />
-      <motion.div
-        className="fixed z-50"
-        style={{
-          top: "50%",
-          // Center in content area: viewport center + half of left sidebar - half of right sidebar adjustment
-          left: "calc(50% + 36px)",
-          transform: "translate(-50%, -50%)",
-          width: "420px",
-          maxWidth: "calc(100vw - 472px)",
-          margin: 0,
-          padding: 0,
-        }}
-        initial={{ opacity: 0, scale: 0.92 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.92 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-      >
-        <div style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border)",
-          borderRadius: "16px",
-          padding: "24px",
-        }}>
-          {/* Header */}
-          <div style={{
-            display: "flex", justifyContent: "space-between", alignItems: "center",
-            marginBottom: "20px",
-          }}>
-            <div style={{ fontSize: "16px", fontWeight: "bold", color: "var(--accent)" }}>
-              {title}
-            </div>
-            <button
-              onClick={onClose}
-              style={{
-                background: "transparent", border: "none", cursor: "pointer",
-                color: "var(--text-secondary)", padding: "4px", borderRadius: "8px",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                transition: "color 0.2s",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-            >
-              <X size={18} />
-            </button>
-          </div>
-          {children}
-        </div>
-      </motion.div>
-    </>
-  );
-}
-
-// ===== Stopwatch Dialog =====
-
-export default function StopwatchDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function StopwatchBody() {
   const [running, setRunning] = useState(false);
   const [elapsed, setElapsed] = useState(0);
   const [laps, setLaps] = useState<number[]>([]);
-  const [startTime, setStartTime] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
+  const startTimeRef = useRef(0);
+  const hasStartedRef = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const tick = useCallback(() => {
-    setElapsed(Date.now() - startTime);
-  }, [startTime]);
+    setElapsed(Date.now() - startTimeRef.current);
+  }, []);
 
   useEffect(() => {
-    if (open && running) {
+    if (running) {
       intervalRef.current = setInterval(tick, 50);
+    } else if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [open, running, tick]);
-
-  useEffect(() => {
-    if (!open) {
-      setRunning(false);
-      setElapsed(0);
-      setLaps([]);
-      setStartTime(0);
-      setHasStarted(false);
-    }
-  }, [open]);
+  }, [running, tick]);
 
   const handleStart = () => {
-    if (!hasStarted) {
-      setStartTime(Date.now());
-      setHasStarted(true);
+    if (!hasStartedRef.current) {
+      startTimeRef.current = Date.now();
+      hasStartedRef.current = true;
     } else {
-      setStartTime(Date.now() - elapsed);
+      startTimeRef.current = Date.now() - elapsed;
     }
     setRunning(true);
   };
@@ -146,11 +172,12 @@ export default function StopwatchDialog({ open, onClose }: { open: boolean; onCl
   const handlePause = () => setRunning(false);
 
   const handleReset = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
     setRunning(false);
     setElapsed(0);
     setLaps([]);
-    setStartTime(0);
-    setHasStarted(false);
+    startTimeRef.current = 0;
+    hasStartedRef.current = false;
   };
 
   const handleLap = () => setLaps((prev) => [...prev, elapsed]);
@@ -165,7 +192,7 @@ export default function StopwatchDialog({ open, onClose }: { open: boolean; onCl
   const formatLapTime = (ms: number, prevMs: number) => formatTime(ms - prevMs);
 
   return (
-    <CenteredDialog open={open} onClose={onClose} title="秒表">
+    <>
       {/* Display */}
       <div style={{
         textAlign: "center", fontSize: "42px", fontWeight: "bold",
@@ -221,6 +248,18 @@ export default function StopwatchDialog({ open, onClose }: { open: boolean; onCl
           })}
         </div>
       )}
-    </CenteredDialog>
+    </>
   );
+}
+
+// ===== Hook to open stopwatch dialog =====
+
+export function useStopwatch() {
+  const { openDialog } = useDialog();
+
+  const open = () => {
+    openDialog("秒表", <StopwatchBody />);
+  };
+
+  return { open };
 }

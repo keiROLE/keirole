@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ChevronDown, ChevronUp } from "lucide-react";
-import { CenteredDialog } from "@/components/home/StopwatchDialog";
+import { useDialog } from "@/components/home/StopwatchDialog";
 
 interface Holiday {
   name: string;
@@ -14,7 +13,6 @@ interface Holiday {
   endDay: number;
 }
 
-// Chinese public holidays (dates approximate, based on typical schedules)
 const holidays: Holiday[] = [
   { name: "元旦", icon: "🎆", startMonth: 0, startDay: 1, endMonth: 0, endDay: 1 },
   { name: "春节", icon: "🧧", startMonth: 1, startDay: 17, endMonth: 2, endDay: 23 },
@@ -83,7 +81,7 @@ function HolidayRow(h: Holiday & { days: number; progress: number }) {
 }
 
 export default function HolidayCard() {
-  const [expanded, setExpanded] = useState(false);
+  const { openDialog } = useDialog();
 
   const allHolidays = holidays
     .map((h) => ({
@@ -93,7 +91,7 @@ export default function HolidayCard() {
     }))
     .sort((a, b) => a.days - b.days);
 
-  const visible = expanded ? allHolidays : allHolidays.slice(0, 3);
+  const next3 = allHolidays.slice(0, 3);
 
   return (
     <motion.div
@@ -102,33 +100,44 @@ export default function HolidayCard() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.3 }}
     >
-      <div style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px", color: "var(--accent)" }}>
-        假期倒计时
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+        <div style={{ fontSize: "16px", fontWeight: "bold", color: "var(--accent)" }}>
+          假期倒计时
+        </div>
+        <button
+          onClick={() => {
+            openDialog("全部假期", (
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                {allHolidays.map((h) => (
+                  <HolidayRow key={h.name} {...h} />
+                ))}
+              </div>
+            ));
+          }}
+          style={{
+            background: "transparent", border: "1px solid var(--border)",
+            borderRadius: "8px", padding: "4px 10px",
+            color: "var(--text-secondary)", fontSize: "11px", cursor: "pointer",
+            transition: "all 0.2s",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = "var(--accent)";
+            e.currentTarget.style.color = "var(--accent)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = "var(--border)";
+            e.currentTarget.style.color = "var(--text-secondary)";
+          }}
+        >
+          查看全部
+        </button>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-        {visible.map((h) => (
+        {next3.map((h) => (
           <HolidayRow key={h.name} {...h} />
         ))}
       </div>
-
-      {allHolidays.length > 3 && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: "4px",
-            width: "100%", marginTop: "12px", padding: "6px 0",
-            background: "transparent", border: "none",
-            color: "var(--text-secondary)", fontSize: "12px", cursor: "pointer",
-            transition: "color 0.2s",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
-        >
-          {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-          {expanded ? "收起" : `显示全部 (${allHolidays.length}个)`}
-        </button>
-      )}
     </motion.div>
   );
 }
