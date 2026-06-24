@@ -17,18 +17,20 @@ export default function LatestBlogCard() {
   const [blogs, setBlogs] = useState<BlogMeta[]>([]);
 
   useEffect(() => {
-    if (cached) {
-      setBlogs(cached);
+    if (cached !== null) {
+      setBlogs(cached.slice(0, 3));
       return;
     }
-    // Dynamic import to avoid SSR issues with JSON
-    import("@/data/blogs/index.json").then((mod) => {
-      const list = (mod.default || mod) as BlogMeta[];
-      cached = list;
-      setBlogs(list.slice(0, 3));
-    }).catch(() => {
-      setBlogs([]);
-    });
+
+    fetch("/data/blogs/index.json?t=" + Date.now())
+      .then((res) => res.json())
+      .then((list: BlogMeta[]) => {
+        cached = list;
+        setBlogs(list.slice(0, 3));
+      })
+      .catch(() => {
+        setBlogs([]);
+      });
   }, []);
 
   if (blogs.length === 0) {
