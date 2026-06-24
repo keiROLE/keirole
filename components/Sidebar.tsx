@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Grid3X3, Smile, Star } from "lucide-react";
+import { BookOpen, Grid3X3, Home, Smile, Star } from "lucide-react";
 
 const navItems = [
+  { label: "首页", href: "/", icon: Home },
   { label: "近期文章", href: "/blog", icon: BookOpen },
   { label: "我的项目", href: "/projects", icon: Grid3X3 },
   { label: "关于网站", href: "/about", icon: Smile },
@@ -15,7 +16,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen flex flex-col items-center py-8 z-50">
+    <aside className="fixed left-0 top-0 h-screen flex flex-col py-8 pl-2 z-50">
       <div
         className="w-[260px] rounded-2xl px-4 py-6 flex flex-col gap-1"
         style={{
