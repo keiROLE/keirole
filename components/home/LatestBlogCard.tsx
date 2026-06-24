@@ -82,7 +82,7 @@ export default function LatestBlogCard() {
             <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "70%" }}>
               {blog.title}
             </span>
-            <span style={{ fontSize: "12px", color: "var(--text-secondary)", shrink: 0 }}>
+            <span style={{ fontSize: "12px", color: "var(--text-secondary)", flexShrink: 0 }}>
               {blog.date}
             </span>
           </Link>

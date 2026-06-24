@@ -23,12 +23,12 @@ export default function GreetingCard() {
       transition={{ duration: 0.5 }}
     >
       {/* Avatar */}
-      <div
-        className="w-20 h-20 rounded-full flex items-center justify-center text-3xl shrink-0"
-        style={{ background: "var(--accent-dim)", color: "var(--accent)" }}
-      >
-        {greeting.zh[0]}
-      </div>
+      <img
+        src="/avatar.svg"
+        alt="avatar"
+        className="w-20 h-20 rounded-full object-cover shrink-0"
+        style={{ border: "2px solid var(--accent)" }}
+      />
 
       {/* Text */}
       <div>

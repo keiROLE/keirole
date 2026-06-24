@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Grid3X3, Home, Smile, Star } from "lucide-react";
+import { BookOpen, Grid3X3, Home, Smile, Star, Clock, Timer } from "lucide-react";
 
 const navItems = [
   { label: "首页", href: "/", icon: Home },
@@ -10,6 +10,8 @@ const navItems = [
   { label: "我的项目", href: "/projects", icon: Grid3X3 },
   { label: "关于网站", href: "/about", icon: Smile },
   { label: "推荐分享", href: "/share", icon: Star },
+  { label: "秒表", href: "/tools/stopwatch", icon: Timer },
+  { label: "日历", href: "/tools/calendar", icon: Clock },
 ];
 
 export default function Sidebar() {

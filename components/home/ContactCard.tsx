@@ -2,24 +2,24 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Music2, Mail } from "lucide-react";
+import { GitFork, Music2, Mail } from "lucide-react";
 
 const contacts = [
   {
     label: "GitHub",
-    href: "https://github.com/keirole",
-    icon: Github,
+    href: "https://github.com/keiROLE",
+    icon: GitFork,
     action: "open",
   },
   {
     label: "抖音",
-    href: "https://www.douyin.com/user/keirole",
+    href: "https://www.douyin.com/user/MS4wLjABAAAAoGfU2l74-9H6O1XAVSHDxO1eQMTd0ntRxag6wZfAwobwmXZ4tHn10d75aYDkE5OG",
     icon: Music2,
     action: "open",
   },
   {
     label: "Email",
-    href: "mailto:hello@keirole.com",
+    href: "mailto:q_rolehhh@outlook.com",
     icon: Mail,
     action: "copy",
   },
@@ -30,7 +30,7 @@ export default function ContactCard() {
 
   const handleClick = (item: (typeof contacts)[0]) => {
     if (item.action === "copy") {
-      navigator.clipboard.writeText("hello@keirole.com").then(() => {
+      navigator.clipboard.writeText("q_rolehhh@outlook.com").then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       });

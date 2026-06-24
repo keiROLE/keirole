@@ -1,0 +1,23 @@
+[
+  {
+    "name": "OrionTalk",
+    "desc": "单文件 HTML AI 聊天应用，支持群聊、自由讨论、Bot Agent 自动回复",
+    "tech": ["HTML", "CSS", "JavaScript"],
+    "link": "https://oriontalk.pages.dev",
+    "status": "active"
+  },
+  {
+    "name": "Takaomi Blog",
+    "desc": "Next.js 16 个人博客，Aurora 背景 + TiltedCard 效果",
+    "tech": ["Next.js", "TypeScript", "Tailwind CSS"],
+    "link": "https://takaomi-blog.pages.dev",
+    "status": "active"
+  },
+  {
+    "name": "keiROLE Personal Site",
+    "desc": "本个人站，卡片式首页 + 多页面导航",
+    "tech": ["Next.js", "TypeScript", "framer-motion"],
+    "link": "https://keirole.pages.dev",
+    "status": "active"
+  }
+]

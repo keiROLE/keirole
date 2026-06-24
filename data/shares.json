@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Hookify 桌面通知",
+    "desc": "通过 hookify 插件实现 Claude Code 任务完成后自动发送 Windows 气球通知",
+    "type": "工具",
+    "link": ""
+  },
+  {
+    "title": "复盘沉淀流程",
+    "desc": "用 /fp-1 skill 系统化记录和沉淀踩坑经验，避免重复犯错",
+    "type": "方法论",
+    "link": ""
+  },
+  {
+    "title": "Agnes 生图生视频工作流",
+    "desc": "image-to-video 比纯文本质量高得多，注意 base64 图片大小限制",
+    "type": "AI 工具",
+    "link": ""
+  }
+]

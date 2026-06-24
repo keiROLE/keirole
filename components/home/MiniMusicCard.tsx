@@ -148,7 +148,7 @@ export default function MiniMusicCard() {
       </div>
 
       {/* Hidden audio */}
-      <audio ref={audioRef} src="/sound/%E6%9F%B4%E7%94%B0%E7%B4%93-%E3%81%8A%E3%81%8B%E3%81%88%E3%82%8A%E3%81%AA%E3%81%95%E3%81%84.mp3" />
+      <audio ref={audioRef} src="/sound/%E6%9F%B4%E7%94%B0%E6%B7%B3%20-%20%E3%81%8A%E3%81%8B%E3%81%88%E3%82%8A%E3%81%AA%E3%81%95%E3%81%84.mp3" />
     </motion.div>
   );
 }
