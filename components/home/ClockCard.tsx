@@ -10,7 +10,11 @@ const shichen = [
 
 const weekdays = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"];
 
-export default function ClockCard() {
+interface ClockCardProps {
+  onOpenStopwatch?: () => void;
+}
+
+export default function ClockCard({ onOpenStopwatch }: ClockCardProps) {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
@@ -28,6 +32,8 @@ export default function ClockCard() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.1 }}
+      style={{ cursor: onOpenStopwatch ? "pointer" : "default" }}
+      onClick={onOpenStopwatch}
     >
       {/* Time */}
       <div
