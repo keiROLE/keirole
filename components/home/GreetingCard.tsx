@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 const greetings = [
@@ -11,9 +12,16 @@ const greetings = [
 ];
 
 export default function GreetingCard() {
-  const hour = new Date().getHours();
-  const greeting =
-    greetings.find((g) => hour >= g.min && hour <= g.max) ?? greetings[3];
+  const [greeting, setGreeting] = useState(() => {
+    const hour = new Date().getHours();
+    return greetings.find((g) => hour >= g.min && hour <= g.max) ?? greetings[3];
+  });
+
+  // Sync on mount to avoid SSR/client mismatch
+  useEffect(() => {
+    const hour = new Date().getHours();
+    setGreeting(greetings.find((g) => hour >= g.min && hour <= g.max) ?? greetings[3]);
+  }, []);
 
   return (
     <motion.div
@@ -39,7 +47,7 @@ export default function GreetingCard() {
           {greeting.en}
         </div>
         <div style={{ fontSize: "14px", color: "var(--text-primary)", marginTop: "8px" }}>
-          I&#39;m 啓, Nice to meet you!
+          I&apos;m 啓, Nice to meet you!
         </div>
       </div>
     </motion.div>

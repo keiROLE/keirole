@@ -1,8 +1,10 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
-import Link from "next/link";
+import { Suspense } from "react";
 import PageTransition from "@/components/PageTransition";
+import BlogFilter from "@/components/home/BlogFilter";
+import BlogPostList from "@/components/home/BlogPostList";
 
 const postsDir = path.join(process.cwd(), "data/blogs/posts");
 
@@ -27,7 +29,7 @@ function getAllPosts(): BlogPost[] {
         slug,
         title: data.title || slug,
         date: data.date || "",
-        category: data.category || "其他",
+        category: data.category || data.tag || "其他",
       };
     })
     .sort((a, b) => (a.date > b.date ? -1 : 1));
@@ -43,72 +45,17 @@ export default function BlogPage() {
         近期文章
       </h1>
 
-      {/* Category filter */}
+      {/* Category filter — needs Suspense for useSearchParams */}
       {categories.length > 1 && (
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
-          <Link
-            href="/blog"
-            style={{
-              fontSize: "12px",
-              padding: "4px 12px",
-              borderRadius: "12px",
-              border: "1px solid var(--border)",
-              color: "var(--text-secondary)",
-              textDecoration: "none",
-              background: "transparent",
-            }}
-          >
-            全部
-          </Link>
-          {categories.map((cat) => (
-            <Link
-              key={cat}
-              href={`/blog?cat=${encodeURIComponent(cat)}`}
-              style={{
-                fontSize: "12px",
-                padding: "4px 12px",
-                borderRadius: "12px",
-                border: "1px solid var(--border)",
-                color: "var(--text-secondary)",
-                textDecoration: "none",
-                background: "transparent",
-              }}
-            >
-              {cat}
-            </Link>
-          ))}
-        </div>
+        <Suspense fallback={<div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }} />}>
+          <BlogFilter categories={categories} allPosts={posts} />
+        </Suspense>
       )}
 
-      {/* Post list */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        {posts.map((post) => (
-          <Link
-            key={post.slug}
-            href={`/blog/${post.slug}`}
-            className="card"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              textDecoration: "none",
-              color: "inherit",
-            }}
-          >
-            <div>
-              <div style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "4px" }}>
-                {post.title}
-              </div>
-              <div style={{ display: "flex", gap: "8px", fontSize: "12px", color: "var(--text-secondary)" }}>
-                <span>{post.date}</span>
-                <span>·</span>
-                <span>{post.category}</span>
-              </div>
-            </div>
-            <span style={{ color: "var(--accent)", fontSize: "12px" }}>阅读 →</span>
-          </Link>
-        ))}
-      </div>
+      {/* Post list — needs Suspense for useSearchParams */}
+      <Suspense fallback={<div style={{ color: "var(--text-secondary)" }}>加载中...</div>}>
+        <BlogPostList posts={posts} />
+      </Suspense>
 
       {posts.length === 0 && (
         <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>

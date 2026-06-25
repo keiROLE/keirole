@@ -1,21 +1,32 @@
 "use client";
 
+import { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 
 const WEEKDAYS_ZH = ["日", "一", "二", "三", "四", "五", "六"];
 
 export default function CalendarCard() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const today = now.getDate();
+  const [now, setNow] = useState(new Date());
 
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, []);
 
-  const cells: (number | null)[] = [];
-  for (let i = 0; i < firstDay; i++) cells.push(null);
-  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+  const calendar = useMemo(() => {
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const today = now.getDate();
+
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    const cells: (number | null)[] = [];
+    for (let i = 0; i < firstDay; i++) cells.push(null);
+    for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+    return { year, month: month + 1, today, cells };
+  }, [now]);
 
   return (
     <motion.div
@@ -27,7 +38,7 @@ export default function CalendarCard() {
       <div
         style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "12px", color: "var(--accent)" }}
       >
-        {year}年{month + 1}月
+        {calendar.year}年{String(calendar.month).padStart(2, "0")}月
       </div>
 
       {/* Weekday header */}
@@ -45,16 +56,16 @@ export default function CalendarCard() {
       <div
         style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", textAlign: "center", gap: "2px" }}
       >
-        {cells.map((d, i) => (
+        {calendar.cells.map((d, i) => (
           <div
             key={i}
             style={{
               fontSize: "13px",
               padding: "6px 0",
               borderRadius: "8px",
-              color: d === today ? "#fff" : "var(--text-primary)",
-              background: d === today ? "var(--accent)" : "transparent",
-              fontWeight: d === today ? "bold" : "normal",
+              color: d === calendar.today ? "#fff" : "var(--text-primary)",
+              background: d === calendar.today ? "var(--accent)" : "transparent",
+              fontWeight: d === calendar.today ? "bold" : "normal",
             }}
           >
             {d ?? ""}

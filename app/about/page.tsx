@@ -1,3 +1,4 @@
+import ContactCard from "@/components/home/ContactCard";
 import PageTransition from "@/components/PageTransition";
 
 export default function AboutPage() {
@@ -64,7 +65,7 @@ export default function AboutPage() {
       </div>
 
       <div style={{ marginTop: "20px" }}>
-        {/* Footer-style contact for about page */}
+        <ContactCard />
       </div>
     </PageTransition>
   );
