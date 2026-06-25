@@ -3,8 +3,9 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import MiniMusicCard from "@/components/home/MiniMusicCard";
-import ContactCard from "@/components/home/ContactCard";
 import { DialogProvider } from "@/components/home/StopwatchDialog";
+import BlogSidebarSlot from "@/components/BlogSidebarSlot";
+import AuroraBackground from "@/components/AuroraBackground";
 
 export const metadata: Metadata = {
   title: "keiROLE",
@@ -20,24 +21,31 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className="min-h-screen">
         <Sidebar />
-        <main className="ml-[272px] p-8">
+        <main className="p-8 main-content" style={{ marginLeft: "272px", marginRight: "220px" }}>
           <DialogProvider>
-            <div style={{ display: "flex", gap: "20px" }}>
-              <div style={{ flex: 1 }}>
-                {children}
-                <Footer />
-              </div>
-
-              {/* Right sidebar: always visible on every page */}
-              <div style={{ width: "200px", flexShrink: 0 }}>
-                <MiniMusicCard />
-                <div style={{ marginTop: "20px" }}>
-                  <ContactCard compact />
-                </div>
-              </div>
-            </div>
+            {children}
+            <Footer />
           </DialogProvider>
         </main>
+
+        {/* Right sidebar: fixed, always visible on every page */}
+        <div
+          style={{
+            position: "fixed",
+            right: "20px",
+            top: "20px",
+            width: "200px",
+            zIndex: 50,
+          }}
+        >
+          <MiniMusicCard />
+          <div style={{ marginTop: "20px" }}>
+            <BlogSidebarSlot />
+          </div>
+        </div>
+
+        {/* Aurora background — always at bottom layer */}
+        <AuroraBackground />
       </body>
     </html>
   );

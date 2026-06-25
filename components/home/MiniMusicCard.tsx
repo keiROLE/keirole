@@ -1,17 +1,18 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { Play, Pause, RotateCcw } from "lucide-react";
+import { Play, Pause } from "lucide-react";
+import MagicCard from "@/components/ui/MagicCard";
 
-interface MiniMusicCardProps {
-  compact?: boolean;
-}
+const SONG_TITLE = "おかえりなさい";
+const SONG_ARTIST = "柴田淳";
+const AUDIO_SRC = "/sound/sound.mp3";
 
-export default function MiniMusicCard({ compact }: MiniMusicCardProps) {
+export default function MiniMusicCard() {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
-  const controls = useAnimation();
+  const [progress, setProgress] = useState(0);
 
   const togglePlay = async () => {
     const audio = audioRef.current;
@@ -29,134 +30,121 @@ export default function MiniMusicCard({ compact }: MiniMusicCardProps) {
     setPlaying(!playing);
   };
 
-  const reset = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    audio.pause();
-    audio.currentTime = 0;
-    setPlaying(false);
-  };
-
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const onPlay = () => setPlaying(true);
     const onPause = () => setPlaying(false);
+    const onTimeUpdate = () => {
+      if (audio.duration) {
+        setProgress(audio.currentTime / audio.duration);
+      }
+    };
+    const onEnded = () => {
+      setPlaying(false);
+      setProgress(0);
+    };
 
     audio.addEventListener("play", onPlay);
     audio.addEventListener("pause", onPause);
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("ended", onEnded);
     return () => {
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("ended", onEnded);
     };
   }, []);
 
-  useEffect(() => {
-    if (playing) {
-      controls.start({ rotate: 360, transition: { repeat: Infinity, duration: 3, ease: "linear" } });
-    } else {
-      controls.stop();
-      controls.set({ rotate: 0 });
-    }
-  }, [playing, controls]);
-
   return (
-    <motion.div
-      className="card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.6 }}
-    >
-      {/* Rotating disc */}
-      <motion.div
-        className="w-16 h-16 rounded-full flex items-center justify-center mx-auto"
-        style={{
-          width: compact ? "48px" : "64px",
-          height: compact ? "48px" : "64px",
-          background: "conic-gradient(var(--accent-dim), var(--accent), var(--accent-dim), var(--accent))",
-        }}
-        animate={controls}
-      >
+    <MagicCard>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {/* Top row */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <div
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "6px",
+              background: "conic-gradient(var(--accent-dim), var(--accent), var(--accent-dim))",
+              flexShrink: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+                background: "var(--bg-card)",
+              }}
+            />
+          </div>
+
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: "11px", fontWeight: "bold", color: "var(--text-primary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {SONG_TITLE}
+            </div>
+            <div style={{ fontSize: "10px", color: "var(--text-secondary)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {SONG_ARTIST}
+            </div>
+          </div>
+
+          <button
+            onClick={togglePlay}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: "var(--accent)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "4px",
+              flexShrink: 0,
+            }}
+          >
+            {playing ? <Pause size={16} /> : <Play size={16} />}
+          </button>
+        </div>
+
+        {/* Progress bar */}
         <div
-          className="rounded-full"
+          ref={progressRef}
           style={{
-            width: compact ? "24px" : "32px",
-            height: compact ? "24px" : "32px",
-            background: "var(--bg-card)",
-          }}
-        />
-      </motion.div>
-
-      {/* Info */}
-      <div style={{ textAlign: "center", marginTop: "12px" }}>
-        <div style={{ fontSize: compact ? "12px" : "14px", fontWeight: "bold", color: "var(--text-primary)" }}>
-          おかえりなさい
-        </div>
-        <div style={{ fontSize: compact ? "10px" : "12px", color: "var(--text-secondary)" }}>
-          柴田淳
-        </div>
-      </div>
-
-      {/* Controls */}
-      <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "12px" }}>
-        <button
-          onClick={togglePlay}
-          style={{
-            background: "transparent",
-            border: "1px solid var(--border)",
-            borderRadius: "50%",
-            width: compact ? "32px" : "36px",
-            height: compact ? "32px" : "36px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            width: "100%",
+            height: "3px",
+            borderRadius: "2px",
+            background: "rgba(255,255,255,0.1)",
+            overflow: "hidden",
             cursor: "pointer",
-            color: "var(--accent)",
-            transition: "all 0.2s",
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "var(--accent-dim)";
-            e.currentTarget.style.borderColor = "var(--accent)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.borderColor = "var(--border)";
+          onClick={(e) => {
+            const audio = audioRef.current;
+            const bar = progressRef.current;
+            if (!audio || !bar || !audio.duration) return;
+            const rect = bar.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            audio.currentTime = (x / rect.width) * audio.duration;
           }}
         >
-          {playing ? <Pause size={compact ? 14 : 16} /> : <Play size={compact ? 14 : 16} />}
-        </button>
-        <button
-          onClick={reset}
-          title="重置"
-          style={{
-            background: "transparent",
-            border: "1px solid var(--border)",
-            borderRadius: "50%",
-            width: compact ? "32px" : "36px",
-            height: compact ? "32px" : "36px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            cursor: "pointer",
-            color: "var(--text-secondary)",
-            transition: "all 0.2s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = "var(--accent)";
-            e.currentTarget.style.borderColor = "var(--accent)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = "var(--text-secondary)";
-            e.currentTarget.style.borderColor = "var(--border)";
-          }}
-        >
-          <RotateCcw size={compact ? 12 : 14} />
-        </button>
-      </div>
+          <div
+            style={{
+              height: "100%",
+              borderRadius: "2px",
+              background: "var(--accent)",
+              width: `${progress * 100}%`,
+              transition: "width 0.1s linear",
+            }}
+          />
+        </div>
 
-      {/* Hidden audio */}
-      <audio ref={audioRef} src="/sound/%E6%9F%B4%E7%94%B0%E6%B7%B3%20-%20%E3%81%8A%E3%81%8B%E3%81%88%E3%82%8A%E3%81%AA%E3%81%95%E3%81%84.mp3" />
-    </motion.div>
+        <audio ref={audioRef} src={AUDIO_SRC} preload="metadata" />
+      </div>
+    </MagicCard>
   );
 }

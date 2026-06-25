@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import MagicCard from "@/components/ui/MagicCard";
 
 interface BlogPost {
   slug: string;
   title: string;
   date: string;
   category: string;
+  summary?: string;
 }
 
 export default function BlogPostList({ posts }: { posts: BlogPost[] }) {
@@ -16,31 +18,59 @@ export default function BlogPostList({ posts }: { posts: BlogPost[] }) {
   const filtered = activeCat ? posts.filter((p) => p.category === activeCat) : posts;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
       {filtered.map((post) => (
         <Link
           key={post.slug}
           href={`/blog/${post.slug}`}
-          className="card"
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
+            display: "contents",
             textDecoration: "none",
             color: "inherit",
           }}
         >
-          <div>
-            <div style={{ fontSize: "15px", fontWeight: "bold", marginBottom: "4px" }}>
+          <MagicCard style={{ padding: "14px" }}>
+            {/* Category badge */}
+            <span
+              style={{
+                fontSize: "10px",
+                padding: "2px 8px",
+                borderRadius: "10px",
+                border: "1px solid var(--accent)",
+                color: "var(--accent)",
+                alignSelf: "flex-start",
+                opacity: 0.8,
+              }}
+            >
+              {post.category}
+            </span>
+
+            {/* Title */}
+            <div
+              style={{
+                fontSize: "14px",
+                fontWeight: "bold",
+                lineHeight: "1.4",
+                marginTop: "4px",
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: 2,
+                overflow: "hidden",
+              }}
+            >
               {post.title}
             </div>
-            <div style={{ display: "flex", gap: "8px", fontSize: "12px", color: "var(--text-secondary)" }}>
-              <span>{post.date}</span>
-              <span>·</span>
-              <span>{post.category}</span>
+
+            {/* Date */}
+            <div style={{ fontSize: "11px", color: "var(--text-secondary)", marginTop: "4px" }}>
+              {post.date}
             </div>
-          </div>
-          <span style={{ color: "var(--accent)", fontSize: "12px" }}>阅读 →</span>
+
+            {/* Read more */}
+            <div style={{ fontSize: "11px", color: "var(--accent)", marginTop: "auto", paddingTop: "8px" }}>
+              阅读 →
+            </div>
+          </MagicCard>
         </Link>
       ))}
     </div>

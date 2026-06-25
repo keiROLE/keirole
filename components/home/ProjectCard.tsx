@@ -1,0 +1,81 @@
+"use client";
+
+import Link from "next/link";
+import MagicCard from "@/components/ui/MagicCard";
+
+interface ProjectCardProps {
+  title: string;
+  date: string;
+  tag: string;
+  slug: string;
+  externalLink?: string;
+}
+
+export default function ProjectCard({ title, date, tag, slug, externalLink }: ProjectCardProps) {
+  return (
+    <Link href={`/projects/${slug}`} style={{ display: "flex", flexDirection: "column", gap: "8px", minHeight: "120px", textDecoration: "none", color: "inherit" }}>
+      <MagicCard>
+        {/* Tag */}
+        <span
+          style={{
+            fontSize: "10px",
+            padding: "2px 8px",
+            borderRadius: "10px",
+            border: "1px solid var(--accent)",
+            color: "var(--accent)",
+            alignSelf: "flex-start",
+            opacity: 0.8,
+          }}
+        >
+          {tag}
+        </span>
+
+        {/* Title */}
+        <div
+          style={{
+            fontSize: "14px",
+            fontWeight: "bold",
+            lineHeight: "1.4",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 2,
+            overflow: "hidden",
+          }}
+        >
+          {title}
+        </div>
+
+        {/* Date */}
+        <div style={{ fontSize: "11px", color: "var(--text-secondary)" }}>
+          {date}
+        </div>
+
+        {/* Bottom */}
+        <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div style={{ fontSize: "11px", color: "var(--accent)" }}>
+            查看详情 →
+          </div>
+          {externalLink && (
+            <a
+              href={externalLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                fontSize: "11px",
+                padding: "3px 10px",
+                borderRadius: "8px",
+                border: "1px solid var(--accent)",
+                color: "var(--accent)",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+              }}
+            >
+              访问项目 ↗
+            </a>
+          )}
+        </div>
+      </MagicCard>
+    </Link>
+  );
+}

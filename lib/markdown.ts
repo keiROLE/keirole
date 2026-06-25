@@ -1,5 +1,5 @@
 import { remark } from "remark";
-import html from "remark-html";
+import htmlPlugin from "remark-html";
 import gfm from "remark-gfm";
 import { codeToHtml } from "shiki";
 
@@ -11,20 +11,41 @@ const LANGS = [
   "md", "markdown", "sql", "rust", "go", "java", "c", "cpp",
 ] as string[];
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w一-鿿㐀-䶿豈-﫿]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/** Extract heading text and inject id attributes into rendered HTML */
+function addHeadingIds(html: string): string {
+  return html.replace(/<(h([1-6]))>(.*?)<\/\1>/gi, (match, tag, depth, content) => {
+    // Skip if already has an id
+    if (match.includes(' id="')) return match;
+    const id = slugify(content.replace(/<[^>]*>/g, ""));
+    if (id) return `<${tag} id="${id}">${content}</${tag}>`;
+    return match;
+  });
+}
+
 export async function renderMarkdown(content: string): Promise<string> {
   // Pre-process code blocks with shiki, then let remark handle the rest
   const processedContent = await preprocessCodeBlocks(content);
 
   const result = await remark()
     .use(gfm)
-    .use(html, {
+    .use(htmlPlugin, {
       safeHtml: true,
       sanitize: false,
       pretty: true,
     })
     .process(processedContent);
 
-  return String(result);
+  let html = String(result);
+  // Inject id attributes into all heading tags
+  html = addHeadingIds(html);
+  return html;
 }
 
 async function preprocessCodeBlocks(markdown: string): Promise<string> {

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import MagicCard from "@/components/ui/MagicCard";
 
 const greetings = [
   { min: 5, max: 11, zh: "早上好", en: "Good Morning" },
@@ -11,45 +11,38 @@ const greetings = [
   { min: 0, max: 4, zh: "夜深了", en: "Good Night" },
 ];
 
-export default function GreetingCard() {
-  const [greeting, setGreeting] = useState(() => {
-    const hour = new Date().getHours();
-    return greetings.find((g) => hour >= g.min && hour <= g.max) ?? greetings[3];
-  });
+function getGreetingForHour(hour: number) {
+  return greetings.find((g) => hour >= g.min && hour <= g.max) ?? greetings[3];
+}
 
-  // Sync on mount to avoid SSR/client mismatch
-  useEffect(() => {
-    const hour = new Date().getHours();
-    setGreeting(greetings.find((g) => hour >= g.min && hour <= g.max) ?? greetings[3]);
-  }, []);
+export default function GreetingCard() {
+  const hour = new Date().getHours();
+  const greeting = getGreetingForHour(hour);
 
   return (
-    <motion.div
-      className="card flex items-center gap-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-    >
-      {/* Avatar */}
-      <img
-        src="/avatar.svg"
-        alt="avatar"
-        className="w-20 h-20 rounded-full object-cover shrink-0"
-        style={{ border: "2px solid var(--accent)" }}
-      />
+    <MagicCard>
+      <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        {/* Avatar */}
+        <img
+          src="/keipfp.jpg"
+          alt="avatar"
+          className="w-16 h-16 rounded-full object-cover shrink-0"
+          style={{ border: "2px solid var(--accent)" }}
+        />
 
-      {/* Text */}
-      <div>
-        <div style={{ fontSize: "22px", fontWeight: "bold", color: "var(--accent)" }}>
-          {greeting.zh}
-        </div>
-        <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginTop: "4px" }}>
-          {greeting.en}
-        </div>
-        <div style={{ fontSize: "14px", color: "var(--text-primary)", marginTop: "8px" }}>
-          I&apos;m 啓, Nice to meet you!
+        {/* Text */}
+        <div>
+          <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)" }}>
+            {greeting.zh}
+          </div>
+          <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "2px" }}>
+            {greeting.en}
+          </div>
+          <div style={{ fontSize: "13px", color: "var(--text-primary)", marginTop: "6px" }}>
+            I&apos;m 啓, Nice to meet you!
+          </div>
         </div>
       </div>
-    </motion.div>
+    </MagicCard>
   );
 }

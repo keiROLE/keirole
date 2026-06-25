@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import MagicCard from "@/components/ui/MagicCard";
 
 const shichen = [
   "子时", "丑时", "寅时", "卯时", "辰时", "巳时",
@@ -27,32 +27,30 @@ export default function ClockCard({ onOpenStopwatch }: ClockCardProps) {
   const shichenIndex = Math.floor(((hours + 1) % 24) / 2);
 
   return (
-    <motion.div
-      className="card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.1 }}
-      style={{ cursor: onOpenStopwatch ? "pointer" : "default" }}
-      onClick={onOpenStopwatch}
-    >
-      {/* Time */}
+    <MagicCard>
       <div
         style={{
-          fontSize: "48px",
-          fontWeight: "bold",
-          fontVariantNumeric: "tabular-nums",
-          color: "var(--accent)",
-          letterSpacing: "2px",
+          cursor: onOpenStopwatch ? "pointer" : "default",
         }}
+        onClick={onOpenStopwatch}
       >
-        {pad(hours)}:{pad(now.getMinutes())}:{pad(now.getSeconds())}
-      </div>
+        <div
+          style={{
+            fontSize: "42px",
+            fontWeight: "bold",
+            fontVariantNumeric: "tabular-nums",
+            color: "var(--accent)",
+            letterSpacing: "2px",
+          }}
+        >
+          {pad(hours)}:{pad(now.getMinutes())}:{pad(now.getSeconds())}
+        </div>
 
-      {/* Date row */}
-      <div style={{ color: "var(--text-secondary)", marginTop: "8px", fontSize: "14px" }}>
-        {now.getFullYear()}年{pad(now.getMonth() + 1)}月{pad(now.getDate())}日{" "}
-        {weekdays[now.getDay()]} · {shichen[shichenIndex]}
+        <div style={{ color: "var(--text-secondary)", marginTop: "6px", fontSize: "13px" }}>
+          {now.getFullYear()}年{pad(now.getMonth() + 1)}月{pad(now.getDate())}日{" "}
+          {weekdays[now.getDay()]} · {shichen[shichenIndex]}
+        </div>
       </div>
-    </motion.div>
+    </MagicCard>
   );
 }

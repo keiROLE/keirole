@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import PageTransition from "@/components/PageTransition";
+import MagicCard from "@/components/ui/MagicCard";
+import ShareCard from "@/components/home/ShareCard";
 
 const sharesDir = path.join(process.cwd(), "data/shares");
 
@@ -10,20 +12,9 @@ interface Share {
   date: string;
   tag: string;
   link: string;
-  desc: string;
+  description?: string;
   _slug: string;
 }
-
-const typeColors: Record<string, string> = {
-  "工具": "rgba(76, 175, 80, 0.15)",
-  "方法论": "rgba(255, 152, 0, 0.15)",
-  "AI 工具": "rgba(156, 39, 176, 0.15)",
-};
-const typeBorders: Record<string, string> = {
-  "工具": "rgba(76, 175, 80, 0.4)",
-  "方法论": "rgba(255, 152, 0, 0.4)",
-  "AI 工具": "rgba(156, 39, 176, 0.4)",
-};
 
 function getAllShares(): Share[] {
   if (!fs.existsSync(sharesDir)) return [];
@@ -34,10 +25,12 @@ function getAllShares(): Share[] {
     const raw = fs.readFileSync(path.join(sharesDir, file), "utf-8");
     const { data } = matter(raw);
     return {
-      ...data,
-      _slug: file.replace(/\.md$/, ""),
-      desc: data.desc || "",
+      title: data.title || file.replace(/\.md$/, ""),
+      date: data.date || "",
+      tag: data.tag || "推荐",
       link: data.link || "",
+      description: data.description || "",
+      _slug: file.replace(/\.md$/, ""),
     } as Share;
   }).sort((a, b) => (a.date > b.date ? -1 : 1));
 }
@@ -47,31 +40,24 @@ export default function SharePage() {
 
   return (
     <PageTransition>
-      <h1 style={{ color: "var(--accent)", fontSize: "24px", fontWeight: "bold" }}>
-        推荐分享
-      </h1>
-      <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      {/* Header card */}
+      <MagicCard>
+        <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)", marginBottom: "4px" }}>
+          推荐分享
+        </div>
+      </MagicCard>
+
+      {/* Share cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
         {shares.map((share) => (
-          <div key={share._slug} className="card">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-              <span style={{ fontSize: "16px", fontWeight: "bold" }}>{share.title}</span>
-              <span
-                style={{
-                  fontSize: "11px",
-                  padding: "2px 8px",
-                  borderRadius: "12px",
-                  background: typeColors[share.tag] || "var(--accent-dim)",
-                  color: "var(--accent)",
-                  border: `1px solid ${typeBorders[share.tag] || "var(--border)"}`,
-                }}
-              >
-                {share.tag}
-              </span>
-            </div>
-            <p style={{ fontSize: "14px", color: "var(--text-secondary)", lineHeight: "1.6", margin: 0 }}>
-              {share.desc}
-            </p>
-          </div>
+          <ShareCard
+            key={share._slug}
+            title={share.title}
+            date={share.date}
+            tag={share.tag}
+            slug={share._slug}
+            externalLink={share.link}
+          />
         ))}
       </div>
     </PageTransition>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback } from "react";
-import { motion } from "framer-motion";
 import { useDialog } from "@/components/home/StopwatchDialog";
+import MagicCard from "@/components/ui/MagicCard";
 
 interface Holiday {
   name: string;
@@ -34,7 +34,6 @@ function computeHolidays(now: Date): (Holiday & { days: number; progress: number
       const adjustedTarget = target < now ? new Date(target.getFullYear() + 1, h.startMonth, h.startDay) : target;
       const days = Math.ceil((adjustedTarget.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
 
-      // progress: from last holiday to next holiday
       let start = new Date(now.getFullYear(), 0, 1);
       for (let i = holidays.length - 1; i >= 0; i--) {
         const prev = new Date(now.getFullYear(), holidays[i].startMonth, holidays[i].startDay);
@@ -57,7 +56,7 @@ export default function HolidayCard() {
   const [now, setNow] = useState(new Date());
 
   useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 60000); // update every minute
+    const timer = setInterval(() => setNow(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
 
@@ -75,22 +74,17 @@ export default function HolidayCard() {
   }, [allHolidays, openDialog]);
 
   return (
-    <motion.div
-      className="card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.3 }}
-    >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-        <div style={{ fontSize: "16px", fontWeight: "bold", color: "var(--accent)" }}>
+    <MagicCard>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+        <div style={{ fontSize: "15px", fontWeight: "bold", color: "var(--accent)" }}>
           假期倒计时
         </div>
         <button
           onClick={handleExpand}
           style={{
             background: "transparent", border: "1px solid var(--border)",
-            borderRadius: "8px", padding: "4px 10px",
-            color: "var(--text-secondary)", fontSize: "11px", cursor: "pointer",
+            borderRadius: "8px", padding: "3px 8px",
+            color: "var(--text-secondary)", fontSize: "10px", cursor: "pointer",
             transition: "all 0.2s",
           }}
           onMouseEnter={(e) => {
@@ -106,12 +100,12 @@ export default function HolidayCard() {
         </button>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
         {next3.map((h) => (
           <HolidayRow key={h.name} {...h} />
         ))}
       </div>
-    </motion.div>
+    </MagicCard>
   );
 }
 
@@ -119,18 +113,18 @@ function HolidayRow(h: Holiday & { days: number; progress: number }) {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: "13px" }}>
+        <span style={{ fontSize: "12px" }}>
           {h.icon} {h.name}{" "}
-          <span style={{ fontSize: "11px", color: "var(--text-secondary)" }}>
+          <span style={{ fontSize: "10px", color: "var(--text-secondary)" }}>
             {formatDate(h.startMonth, h.startDay)}~{formatDate(h.endMonth, h.endDay)}
           </span>
         </span>
-        <span style={{ fontSize: "13px", color: "var(--accent)", whiteSpace: "nowrap", marginLeft: "8px" }}>
+        <span style={{ fontSize: "12px", color: "var(--accent)", whiteSpace: "nowrap", marginLeft: "8px" }}>
           {h.days === 0 ? "今天！" : `${h.days}天`}
         </span>
       </div>
       <div style={{
-        height: "4px", borderRadius: "2px",
+        height: "3px", borderRadius: "2px",
         background: "var(--border)", marginTop: "4px", overflow: "hidden",
       }}>
         <div style={{

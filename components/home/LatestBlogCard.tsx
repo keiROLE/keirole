@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import MagicCard from "@/components/ui/MagicCard";
 
 interface BlogMeta {
   slug: string;
@@ -22,7 +22,7 @@ export default function LatestBlogCard() {
       return;
     }
 
-    fetch("/data/blogs/index.json?t=" + Date.now())
+    fetch("/data/blogs/index.json")
       .then((res) => res.json())
       .then((list: BlogMeta[]) => {
         cached = list;
@@ -35,34 +35,24 @@ export default function LatestBlogCard() {
 
   if (blogs.length === 0) {
     return (
-      <motion.div
-        className="card"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        <div style={{ fontSize: "16px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
+      <MagicCard>
+        <div style={{ fontSize: "15px", fontWeight: "bold", color: "var(--accent)", marginBottom: "10px" }}>
           最新文章
         </div>
         <div style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
           暂无文章，敬请期待...
         </div>
-      </motion.div>
+      </MagicCard>
     );
   }
 
   return (
-    <motion.div
-      className="card"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.4 }}
-    >
-      <div style={{ fontSize: "16px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
+    <MagicCard>
+      <div style={{ fontSize: "15px", fontWeight: "bold", color: "var(--accent)", marginBottom: "10px" }}>
         最新文章
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
         {blogs.map((blog) => (
           <Link
             key={blog.slug}
@@ -75,7 +65,7 @@ export default function LatestBlogCard() {
               borderRadius: "8px",
               color: "var(--text-primary)",
               textDecoration: "none",
-              fontSize: "14px",
+              fontSize: "13px",
               transition: "background 0.2s",
             }}
             onMouseEnter={(e) => (e.currentTarget.style.background = "var(--accent-dim)")}
@@ -84,12 +74,12 @@ export default function LatestBlogCard() {
             <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "70%" }}>
               {blog.title}
             </span>
-            <span style={{ fontSize: "12px", color: "var(--text-secondary)", flexShrink: 0 }}>
+            <span style={{ fontSize: "11px", color: "var(--text-secondary)", flexShrink: 0 }}>
               {blog.date}
             </span>
           </Link>
         ))}
       </div>
-    </motion.div>
+    </MagicCard>
   );
 }

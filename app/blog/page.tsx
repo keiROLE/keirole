@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { Suspense } from "react";
 import PageTransition from "@/components/PageTransition";
+import MagicCard from "@/components/ui/MagicCard";
 import BlogFilter from "@/components/home/BlogFilter";
 import BlogPostList from "@/components/home/BlogPostList";
 
@@ -41,26 +42,29 @@ export default function BlogPage() {
 
   return (
     <PageTransition>
-      <h1 style={{ color: "var(--accent)", fontSize: "24px", fontWeight: "bold" }}>
-        近期文章
-      </h1>
+      {/* Header card: title + filter tags */}
+      <MagicCard>
+        <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
+          近期文章
+        </div>
+        {categories.length > 1 && (
+          <Suspense fallback={null}>
+            <BlogFilter categories={categories} allPosts={posts} />
+          </Suspense>
+        )}
+      </MagicCard>
 
-      {/* Category filter — needs Suspense for useSearchParams */}
-      {categories.length > 1 && (
-        <Suspense fallback={<div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }} />}>
-          <BlogFilter categories={categories} allPosts={posts} />
-        </Suspense>
-      )}
-
-      {/* Post list — needs Suspense for useSearchParams */}
+      {/* Post list */}
       <Suspense fallback={<div style={{ color: "var(--text-secondary)" }}>加载中...</div>}>
         <BlogPostList posts={posts} />
       </Suspense>
 
       {posts.length === 0 && (
-        <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
-          暂无文章。
-        </p>
+        <MagicCard>
+          <p style={{ color: "var(--text-secondary)", fontSize: "13px" }}>
+            暂无文章。
+          </p>
+        </MagicCard>
       )}
     </PageTransition>
   );

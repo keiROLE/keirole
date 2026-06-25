@@ -15,7 +15,7 @@ export default function Footer() {
         <span style={{ color: "var(--accent)" }}>keiROLE</span>
       </div>
       <div style={{ marginTop: "4px" }}>
-        Built with Next.js + Tailwind CSS + framer-motion
+        Built with Next.js + Tailwind CSS + GSAP
       </div>
     </footer>
   );
