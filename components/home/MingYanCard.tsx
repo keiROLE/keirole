@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import MagicCard from "@/components/ui/MagicCard";
 
 const FALLBACK_QUOTES = [
@@ -10,38 +10,64 @@ const FALLBACK_QUOTES = [
   "船停在船坞里最安全，但不是造船的目的。",
 ];
 
-let cachedQuoteLines: string[] | null = null;
-
-function pickRandomQuote(): string {
-  if (cachedQuoteLines && cachedQuoteLines.length > 0) {
-    return cachedQuoteLines[Math.floor(Math.random() * cachedQuoteLines.length)];
-  }
-  return FALLBACK_QUOTES[Math.floor(Math.random() * FALLBACK_QUOTES.length)];
-}
-
 export default function MingYanCard() {
-  const [quote, setQuote] = useState(() => pickRandomQuote());
+  const [quote, setQuote] = useState(FALLBACK_QUOTES[0]);
+  const [loaded, setLoaded] = useState(false);
+  const [allQuotes, setAllQuotes] = useState<string[]>(FALLBACK_QUOTES);
 
-  // Load quotes once on mount (client-side only)
-  if (!cachedQuoteLines) {
+  useEffect(() => {
     fetch("/mingyan.md")
       .then((res) => res.text())
       .then((text) => {
-        cachedQuoteLines = text
+        const lines = text
           .split("\n")
           .map((l) => l.trim())
           .filter((l) => l.length > 0);
+        if (lines.length > 0) {
+          setAllQuotes(lines);
+        }
       })
-      .catch(() => {
-        cachedQuoteLines = [];
-      });
+      .catch(() => {})
+      .finally(() => setLoaded(true));
+  }, []);
+
+  const handleClick = useCallback(() => {
+    const idx = Math.floor(Math.random() * allQuotes.length);
+    setQuote(allQuotes[idx]);
+  }, [allQuotes]);
+
+  if (!loaded) {
+    return (
+      <MagicCard>
+        <div
+          style={{
+            fontSize: "12px",
+            fontWeight: "bold",
+            color: "var(--accent)",
+            marginBottom: "8px",
+            letterSpacing: "2px",
+          }}
+        >
+          名言
+        </div>
+        <div
+          style={{
+            fontSize: "13px",
+            color: "var(--text-secondary)",
+            lineHeight: "1.7",
+          }}
+        >
+          加载中...
+        </div>
+      </MagicCard>
+    );
   }
 
   return (
     <MagicCard>
       <div
         style={{ cursor: "pointer", userSelect: "none" }}
-        onClick={() => setQuote(pickRandomQuote())}
+        onClick={handleClick}
       >
         <div
           style={{

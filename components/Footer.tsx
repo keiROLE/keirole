@@ -1,4 +1,10 @@
+"use client";
+
+import { useState } from "react";
+
 export default function Footer() {
+  const [year] = useState(() => new Date().getFullYear());
+
   return (
     <footer
       style={{
@@ -11,7 +17,7 @@ export default function Footer() {
       }}
     >
       <div>
-        &copy; {new Date().getFullYear()}{" "}
+        &copy; {year}{" "}
         <span style={{ color: "var(--accent)" }}>keiROLE</span>
       </div>
       <div style={{ marginTop: "4px" }}>

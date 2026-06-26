@@ -49,7 +49,6 @@ export default async function ShareDetailPage({ params }: { params: Promise<{ sl
               href={data.link}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
               style={{
                 fontSize: "13px",
                 color: "var(--accent)",
@@ -64,6 +63,12 @@ export default async function ShareDetailPage({ params }: { params: Promise<{ sl
             </a>
           )}
         </div>
+
+        {data.desc && (
+          <div style={{ fontSize: "14px", color: "var(--text-secondary)", marginBottom: "16px" }}>
+            {data.desc}
+          </div>
+        )}
 
         <div
           className="markdown-body"

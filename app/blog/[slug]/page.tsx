@@ -76,9 +76,6 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </Link>
 
         <MagicCard enableTilt={false} enableMagnetism={false}>
-          <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
-            {data.title || slug}
-          </div>
           <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "16px" }}>
             {data.date} · {data.category}
           </div>

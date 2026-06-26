@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FC } from "react";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
@@ -10,6 +11,10 @@ import AuroraBackground from "@/components/AuroraBackground";
 export const metadata: Metadata = {
   title: "keiROLE",
   description: "keiROLE personal site — keiROLE.pages.dev",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
 };
 
 export default function RootLayout({

@@ -56,23 +56,26 @@ export default function ShareCard({ title, date, tag, slug, externalLink }: Shar
             查看详情 →
           </div>
           {externalLink && (
-            <a
-              href={externalLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                window.open(externalLink, "_blank", "noopener,noreferrer");
+              }}
               style={{
                 fontSize: "11px",
                 padding: "3px 10px",
                 borderRadius: "8px",
                 border: "1px solid var(--accent)",
+                background: "transparent",
                 color: "var(--accent)",
                 textDecoration: "none",
                 whiteSpace: "nowrap",
+                cursor: "pointer",
               }}
             >
               访问链接 ↗
-            </a>
+            </button>
           )}
         </div>
       </MagicCard>

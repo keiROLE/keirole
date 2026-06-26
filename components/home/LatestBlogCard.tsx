@@ -15,10 +15,12 @@ let cached: BlogMeta[] | null = null;
 
 export default function LatestBlogCard() {
   const [blogs, setBlogs] = useState<BlogMeta[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (cached !== null) {
       setBlogs(cached.slice(0, 3));
+      setLoaded(true);
       return;
     }
 
@@ -30,8 +32,22 @@ export default function LatestBlogCard() {
       })
       .catch(() => {
         setBlogs([]);
-      });
+      })
+      .finally(() => setLoaded(true));
   }, []);
+
+  if (!loaded) {
+    return (
+      <MagicCard>
+        <div style={{ fontSize: "15px", fontWeight: "bold", color: "var(--accent)", marginBottom: "10px" }}>
+          最新文章
+        </div>
+        <div style={{ fontSize: "13px", color: "var(--text-secondary)" }}>
+          加载中...
+        </div>
+      </MagicCard>
+    );
+  }
 
   if (blogs.length === 0) {
     return (

@@ -16,7 +16,7 @@ function getGreetingForHour(hour: number) {
 }
 
 export default function GreetingCard() {
-  const hour = new Date().getHours();
+  const [hour] = useState(() => new Date().getHours());
   const greeting = getGreetingForHour(hour);
 
   return (

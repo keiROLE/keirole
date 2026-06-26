@@ -109,7 +109,7 @@ export default function HolidayCard() {
   );
 }
 
-function HolidayRow(h: Holiday & { days: number; progress: number }) {
+function HolidayRow(h: Holiday & { days: number; progress: number }): JSX.Element {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
@@ -124,11 +124,11 @@ function HolidayRow(h: Holiday & { days: number; progress: number }) {
         </span>
       </div>
       <div style={{
-        height: "3px", borderRadius: "2px",
+        width: "100%", height: "3px", borderRadius: "2px",
         background: "var(--border)", marginTop: "4px", overflow: "hidden",
       }}>
         <div style={{
-          width: `${h.progress}%`, height: "100%", borderRadius: "2px",
+          width: `${h.progress.toFixed(2)}%`, height: "100%", borderRadius: "2px",
           background: "var(--accent)", transition: "width 0.5s ease",
         }} />
       </div>

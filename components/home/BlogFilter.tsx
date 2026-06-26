@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import MagicCard from "@/components/ui/MagicCard";
 
@@ -11,7 +12,9 @@ export default function BlogFilter({
   categories: string[];
   allPosts: { slug: string; title: string; date: string; category: string }[];
 }) {
-  const [activeCat, setActiveCat] = useState("");
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const activeCat = searchParams.get("cat") || "";
 
   return (
     <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
