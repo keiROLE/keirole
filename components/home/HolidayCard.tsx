@@ -109,7 +109,7 @@ export default function HolidayCard() {
   );
 }
 
-function HolidayRow(h: Holiday & { days: number; progress: number }): JSX.Element {
+function HolidayRow(h: Holiday & { days: number; progress: number }) {
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
