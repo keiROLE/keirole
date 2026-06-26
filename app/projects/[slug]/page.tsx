@@ -9,6 +9,13 @@ import MagicCard from "@/components/ui/MagicCard";
 
 const projectsDir = path.join(process.cwd(), "data/projects");
 
+export async function generateStaticParams() {
+  const files = fs.readdirSync(projectsDir);
+  return files
+    .filter(f => f.endsWith(".md"))
+    .map(f => ({ slug: f.replace(/\.md$/, "") }));
+}
+
 interface Params {
   slug: string;
 }

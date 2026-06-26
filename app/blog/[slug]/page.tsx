@@ -10,6 +10,13 @@ import MagicCard from "@/components/ui/MagicCard";
 
 const postsDir = path.join(process.cwd(), "data/blogs/posts");
 
+export async function generateStaticParams() {
+  const files = fs.readdirSync(postsDir);
+  return files
+    .filter(f => f.endsWith(".md"))
+    .map(f => ({ slug: f.replace(/\.md$/, "") }));
+}
+
 interface TOCItem {
   text: string;
   level: number;

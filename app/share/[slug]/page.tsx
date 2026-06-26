@@ -9,6 +9,13 @@ import MagicCard from "@/components/ui/MagicCard";
 
 const sharesDir = path.join(process.cwd(), "data/shares");
 
+export async function generateStaticParams() {
+  const files = fs.readdirSync(sharesDir);
+  return files
+    .filter(f => f.endsWith(".md"))
+    .map(f => ({ slug: f.replace(/\.md$/, "") }));
+}
+
 export default async function ShareDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const filePath = path.join(sharesDir, `${slug}.md`);
