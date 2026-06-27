@@ -42,7 +42,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         ← 返回项目列表
       </Link>
 
-      <MagicCard enableTilt={false} enableMagnetism={false}>
+      <MagicCard>
         <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
           {data.title || slug}
         </div>

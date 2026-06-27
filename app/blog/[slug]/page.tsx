@@ -75,7 +75,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           ← 返回文章列表
         </Link>
 
-        <MagicCard enableTilt={false} enableMagnetism={false}>
+        <MagicCard>
           <div style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "16px" }}>
             {data.date} · {data.category}
           </div>

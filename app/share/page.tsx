@@ -3,7 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import PageTransition from "@/components/PageTransition";
 import MagicCard from "@/components/ui/MagicCard";
-import ShareCard from "@/components/home/ShareCard";
+import SharesList from "@/components/home/SharesList";
 
 const sharesDir = path.join(process.cwd(), "data/shares");
 
@@ -13,7 +13,18 @@ interface Share {
   tag: string;
   link: string;
   description?: string;
+  bodyText: string;
   _slug: string;
+}
+
+/** Extract first paragraph from markdown content as fallback description */
+function extractFirstParagraph(content: string): string {
+  const paragraphs = content
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0);
+  if (paragraphs.length === 0) return "";
+  return paragraphs[0].replace(/^#+\s*/, "").slice(0, 200);
 }
 
 function getAllShares(): Share[] {
@@ -23,13 +34,15 @@ function getAllShares(): Share[] {
 
   return files.map((file) => {
     const raw = fs.readFileSync(path.join(sharesDir, file), "utf-8");
-    const { data } = matter(raw);
+    const { data, content } = matter(raw);
+    const description = data.desc || extractFirstParagraph(content) || "";
     return {
       title: data.title || file.replace(/\.md$/, ""),
       date: data.date || "",
       tag: data.tag || "推荐",
       link: data.link || "",
-      description: data.description || "",
+      description,
+      bodyText: content,
       _slug: file.replace(/\.md$/, ""),
     } as Share;
   }).sort((a, b) => (a.date > b.date ? -1 : 1));
@@ -40,26 +53,13 @@ export default function SharePage() {
 
   return (
     <PageTransition>
-      {/* Header card */}
       <MagicCard>
         <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)", marginBottom: "4px" }}>
           推荐分享
         </div>
       </MagicCard>
 
-      {/* Share cards */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "12px" }}>
-        {shares.map((share) => (
-          <ShareCard
-            key={share._slug}
-            title={share.title}
-            date={share.date}
-            tag={share.tag}
-            slug={share._slug}
-            externalLink={share.link}
-          />
-        ))}
-      </div>
+      <SharesList shares={shares} />
     </PageTransition>
   );
 }

@@ -38,11 +38,11 @@ export default async function ShareDetailPage({ params }: { params: Promise<{ sl
         ← 返回推荐列表
       </Link>
 
-      <MagicCard enableTilt={false} enableMagnetism={false}>
+      <MagicCard>
         <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
           {data.title || slug}
         </div>
-        <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "16px" }}>
+        <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "16px", flexWrap: "wrap" }}>
           <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>{data.date || ""}</span>
           {data.link && (
             <a
@@ -64,12 +64,14 @@ export default async function ShareDetailPage({ params }: { params: Promise<{ sl
           )}
         </div>
 
+        {/* Brief intro from frontmatter */}
         {data.desc && (
           <div style={{ fontSize: "14px", color: "var(--text-secondary)", marginBottom: "16px" }}>
             {data.desc}
           </div>
         )}
 
+        {/* Detailed introduction in markdown */}
         <div
           className="markdown-body"
           style={{ lineHeight: "1.8" }}

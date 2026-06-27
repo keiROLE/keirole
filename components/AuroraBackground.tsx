@@ -150,6 +150,9 @@ export default function AuroraBackground({
       return [c.r, c.g, c.b];
     });
 
+    // Cached color array — updated only when props change
+    let cachedColorArray: number[][] = colorStopsArray;
+
     const program = new Program(gl, {
       vertex: VERT,
       fragment: FRAG,
@@ -198,10 +201,14 @@ export default function AuroraBackground({
       program.uniforms.uTime.value = (performance.now() - startTime) * 0.001 * s;
       program.uniforms.uAmplitude.value = a;
       program.uniforms.uBlend.value = b;
-      program.uniforms.uColorStops.value = cs.map((hex) => {
-        const c = new Color(hex);
-        return [c.r, c.g, c.b];
-      });
+      // Only re-parse colors if they actually changed
+      if (cs !== colorStops) {
+        cachedColorArray = cs.map((hex) => {
+          const c = new Color(hex);
+          return [c.r, c.g, c.b];
+        });
+        program.uniforms.uColorStops.value = cachedColorArray;
+      }
       renderer.render({ scene: mesh });
     };
     animId = requestAnimationFrame(animLoop);

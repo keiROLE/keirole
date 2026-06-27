@@ -8,8 +8,26 @@ const SONG_TITLE = "おかえりなさい";
 const SONG_ARTIST = "柴田淳";
 const AUDIO_SRC = "/sound/sound.mp3";
 
-export default function MiniMusicCard() {
+// Lazy-load audio to avoid blocking initial render
+function useLazyAudio(src: string) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    // Create audio element lazily on mount
+    const audio = new Audio(src);
+    audio.preload = "auto";
+    audioRef.current = audio;
+    audio.addEventListener("canplaythrough", () => setReady(true), { once: true });
+    // Timeout fallback: assume ready after 3s regardless
+    setTimeout(() => setReady(true), 3000);
+  }, [src]);
+
+  return audioRef;
+}
+
+export default function MiniMusicCard() {
+  const audioRef = useLazyAudio(AUDIO_SRC);
   const progressRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -143,7 +161,6 @@ export default function MiniMusicCard() {
           />
         </div>
 
-        <audio ref={audioRef} src={AUDIO_SRC} preload="metadata" />
       </div>
     </MagicCard>
   );

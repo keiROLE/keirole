@@ -8,10 +8,11 @@ interface ShareCardProps {
   date: string;
   tag: string;
   slug: string;
+  description?: string;
   externalLink?: string;
 }
 
-export default function ShareCard({ title, date, tag, slug, externalLink }: ShareCardProps) {
+export default function ShareCard({ title, date, tag, slug, description, externalLink }: ShareCardProps) {
   return (
     <Link href={`/share/${slug}`} style={{ display: "flex", flexDirection: "column", gap: "8px", minHeight: "120px", textDecoration: "none", color: "inherit" }}>
       <MagicCard>
@@ -45,6 +46,23 @@ export default function ShareCard({ title, date, tag, slug, externalLink }: Shar
           {title}
         </div>
 
+        {/* Description */}
+        {description && (
+          <div
+            style={{
+              fontSize: "11px",
+              color: "var(--text-secondary)",
+              lineHeight: "1.5",
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 3,
+              overflow: "hidden",
+            }}
+          >
+            {description}
+          </div>
+        )}
+
         {/* Date */}
         <div style={{ fontSize: "11px", color: "var(--text-secondary)" }}>
           {date}
@@ -52,8 +70,8 @@ export default function ShareCard({ title, date, tag, slug, externalLink }: Shar
 
         {/* Bottom */}
         <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ fontSize: "11px", color: "var(--accent)" }}>
-            查看详情 →
+          <div style={{ fontSize: "11px", color: "var(--text-secondary)" }}>
+            了解更多 →
           </div>
           {externalLink && (
             <button

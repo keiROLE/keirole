@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Grid3X3, Home, Smile, GitFork, Music2, Mail } from "lucide-react";
+import { BookOpen, Grid3X3, Home, Share2, Info, GitFork, Music2, Mail } from "lucide-react";
 import { useState } from "react";
 import MagicCard from "@/components/ui/MagicCard";
 
@@ -10,8 +10,8 @@ const navItems = [
   { label: "首页", href: "/", icon: Home },
   { label: "近期文章", href: "/blog", icon: BookOpen },
   { label: "我的项目", href: "/projects", icon: Grid3X3 },
-  { label: "推荐分享", href: "/share", icon: Smile },
-  { label: "关于网站", href: "/about", icon: Smile },
+  { label: "推荐分享", href: "/share", icon: Share2 },
+  { label: "关于网站", href: "/about", icon: Info },
 ];
 
 const contacts = [
@@ -50,7 +50,7 @@ export default function Sidebar() {
         </div>
 
         {/* Navigation Card */}
-        <MagicCard>
+        <MagicCard goldBorder={false}>
           <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -80,7 +80,7 @@ export default function Sidebar() {
         </MagicCard>
 
         {/* Contact Card */}
-        <MagicCard>
+        <MagicCard goldBorder={false}>
           <div style={{ fontSize: "10px", color: "var(--text-secondary)", fontWeight: "bold", marginBottom: "4px" }}>
             联系我
           </div>

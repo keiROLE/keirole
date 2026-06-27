@@ -14,6 +14,8 @@ interface BlogPost {
   title: string;
   date: string;
   category: string;
+  summary?: string;
+  bodyText: string;
 }
 
 function getAllPosts(): BlogPost[] {
@@ -23,14 +25,16 @@ function getAllPosts(): BlogPost[] {
 
   return files
     .map((file) => {
-      const md = fs.readFileSync(path.join(postsDir, file), "utf-8");
-      const { data } = matter(md);
+      const raw = fs.readFileSync(path.join(postsDir, file), "utf-8");
+      const { data, content } = matter(raw);
       const slug = file.replace(/\.md$/, "");
       return {
         slug,
         title: data.title || slug,
         date: data.date || "",
         category: data.category || data.tag || "其他",
+        summary: data.summary || "",
+        bodyText: content,
       };
     })
     .sort((a, b) => (a.date > b.date ? -1 : 1));
@@ -42,7 +46,6 @@ export default function BlogPage() {
 
   return (
     <PageTransition>
-      {/* Header card: title + filter tags */}
       <MagicCard>
         <div style={{ fontSize: "20px", fontWeight: "bold", color: "var(--accent)", marginBottom: "12px" }}>
           近期文章
@@ -54,7 +57,6 @@ export default function BlogPage() {
         )}
       </MagicCard>
 
-      {/* Post list */}
       <Suspense fallback={<div style={{ color: "var(--text-secondary)" }}>加载中...</div>}>
         <BlogPostList posts={posts} />
       </Suspense>
