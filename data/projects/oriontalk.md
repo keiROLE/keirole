@@ -8,7 +8,7 @@ tech: "HTML, CSS, JavaScript"
 desc: "单文件 HTML AI 聊天应用，无构建工具，无后端，发给任何人有浏览器就能用。"
 ---
 
-OrionTalk 是一个**单文件 HTML** 私人 AI 聊天网页，使用 DeepSeek API（`deepseek-v4-pro` / `deepseek-v4-flash`）。所有代码（HTML + CSS + JS）在一个 `.html` 文件中，无构建工具，无外部依赖。发给任何人，有浏览器就能用。
+OrionTalk 是一个**单文件 HTML** 私人 AI 聊天网页，可使用 DeepSeek API（`deepseek-v4-pro` / `deepseek-v4-flash`）和Agnes API。所有代码（HTML + CSS + JS）在一个 `.html` 文件中，无构建工具，无外部依赖。发给任何人，有浏览器就能用。
 
 ## 功能
 
