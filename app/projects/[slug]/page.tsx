@@ -50,6 +50,13 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
           <span style={{ fontSize: "13px", color: "var(--text-secondary)" }}>{data.date || ""}</span>
         </div>
 
+        {/* Brief intro from frontmatter */}
+        {data.desc && (
+          <div style={{ fontSize: "14px", color: "var(--text-secondary)", marginBottom: "16px" }}>
+            {data.desc}
+          </div>
+        )}
+
         <div
           className="markdown-body"
           style={{ lineHeight: "1.8" }}
