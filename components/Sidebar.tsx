@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Grid3X3, Home, Share2, Info, GitFork, Music2, Mail } from "lucide-react";
+import { BookOpen, Grid3X3, Home, Share2, Info, GitFork, Music2, Mail, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import MagicCard from "@/components/ui/MagicCard";
 
@@ -18,6 +18,7 @@ const contacts = [
   { label: "GitHub", href: "https://github.com/keiROLE", icon: GitFork, action: "open" as const },
   { label: "抖音", href: "https://www.douyin.com/user/MS4wLjABAAAAoGfU2l74-9H6O1XAVSHDxO1eQMTd0ntRxag6wZfAwobwmXZ4tHn10d75aYDkE5OG", icon: Music2, action: "open" as const },
   { label: "Email", href: "mailto:q_rolehhh@outlook.com", icon: Mail, action: "copy" as const },
+  { label: "微信", href: "takaomi_", icon: MessageCircle, action: "copy" as const },
 ];
 
 export default function Sidebar() {
@@ -26,7 +27,8 @@ export default function Sidebar() {
 
   const handleClick = (item: (typeof contacts)[0]) => {
     if (item.action === "copy") {
-      navigator.clipboard.writeText("q_rolehhh@outlook.com").then(() => {
+      const text = item.label === "微信" ? "takaomi_" : "q_rolehhh@outlook.com";
+      navigator.clipboard.writeText(text).then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       });
@@ -118,8 +120,7 @@ export default function Sidebar() {
                 >
                   <Icon size={14} style={{ color: "var(--accent)" }} />
                   <span style={{ whiteSpace: "nowrap" }}>
-                    {item.label}
-                    {item.label === "Email" && copied ? " ✓" : ""}
+                    {item.label}{copied ? " ✓" : ""}
                   </span>
                 </button>
               );
