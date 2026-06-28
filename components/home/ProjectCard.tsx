@@ -9,9 +9,10 @@ interface ProjectCardProps {
   tag: string;
   slug: string;
   externalLink?: string;
+  description?: string;
 }
 
-export default function ProjectCard({ title, date, tag, slug, externalLink }: ProjectCardProps) {
+export default function ProjectCard({ title, date, tag, slug, externalLink, description }: ProjectCardProps) {
   return (
     <Link href={`/projects/${slug}`} style={{ display: "flex", flexDirection: "column", gap: "8px", minHeight: "120px", textDecoration: "none", color: "inherit" }}>
       <MagicCard>
@@ -49,6 +50,23 @@ export default function ProjectCard({ title, date, tag, slug, externalLink }: Pr
         <div style={{ fontSize: "11px", color: "var(--text-secondary)" }}>
           {date}
         </div>
+
+        {/* Description */}
+        {description && (
+          <div
+            style={{
+              fontSize: "11px",
+              color: "var(--text-secondary)",
+              lineHeight: "1.5",
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 3,
+              overflow: "hidden",
+            }}
+          >
+            {description}
+          </div>
+        )}
 
         {/* Bottom */}
         <div style={{ marginTop: "auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>

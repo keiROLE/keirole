@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Grid3X3, Home, Share2, Info, GitFork, Music2, Mail } from "lucide-react";
+import { BookOpen, Grid3X3, Home, Share2, Info, GitFork, Music2, Mail, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import MagicCard from "@/components/ui/MagicCard";
 
@@ -17,18 +17,20 @@ const navItems = [
 const contacts = [
   { label: "GitHub", href: "https://github.com/keiROLE", icon: GitFork, action: "open" as const },
   { label: "抖音", href: "https://www.douyin.com/user/MS4wLjABAAAAoGfU2l74-9H6O1XAVSHDxO1eQMTd0ntRxag6wZfAwobwmXZ4tHn10d75aYDkE5OG", icon: Music2, action: "open" as const },
-  { label: "Email", href: "mailto:q_rolehhh@outlook.com", icon: Mail, action: "copy" as const },
+  { label: "Email", href: "mailto:q_rolehhh@outlook.com", icon: Mail, action: "copy" as const, copyText: "q_rolehhh@outlook.com" },
+  { label: "微信", href: "#", icon: MessageCircle, action: "copy" as const, copyText: "takaomi_" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [copied, setCopied] = useState(false);
+  const [copiedLabel, setCopiedLabel] = useState<string | null>(null);
 
   const handleClick = (item: (typeof contacts)[0]) => {
     if (item.action === "copy") {
-      navigator.clipboard.writeText("q_rolehhh@outlook.com").then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+      const text = item.copyText || item.href;
+      navigator.clipboard.writeText(text).then(() => {
+        setCopiedLabel(item.label);
+        setTimeout(() => setCopiedLabel(null), 2000);
       });
     } else {
       window.open(item.href, "_blank");
@@ -46,7 +48,7 @@ export default function Sidebar() {
           className="text-xl font-bold px-2"
           style={{ color: "var(--accent)", marginBottom: "4px" }}
         >
-          keiROLE
+          keiROLE <span style={{ fontSize: "11px", opacity: 0.6, fontWeight: "normal" }}>v1.4</span>
         </div>
 
         {/* Navigation Card */}
@@ -118,8 +120,7 @@ export default function Sidebar() {
                 >
                   <Icon size={14} style={{ color: "var(--accent)" }} />
                   <span style={{ whiteSpace: "nowrap" }}>
-                    {item.label}
-                    {item.label === "Email" && copied ? " ✓" : ""}
+                    {item.label}{copiedLabel === item.label ? " ✓" : ""}
                   </span>
                 </button>
               );

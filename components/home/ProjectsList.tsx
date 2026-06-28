@@ -50,6 +50,7 @@ export default function ProjectsList({ projects }: { projects: Project[] }) {
               tag={proj.tag}
               slug={proj._slug}
               externalLink={proj.link}
+              description={proj.description}
             />
           </Link>
         ))}
