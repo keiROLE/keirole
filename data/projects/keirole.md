@@ -2,7 +2,7 @@
 title: "keiROLE"
 date: "2026-06-28"
 tag: "个人站"
-link: "https://keirole.com"
+link: "https://keirole.pages.dev/"
 status: "active"
 tech: "Next.js 16, TypeScript, Tailwind CSS, WebGL"
 desc: "基于 Next.js 16 构建的个人站点，暗色主题 + 青色强调，极光 WebGL 背景，Markdown 驱动内容管理。"
