@@ -1,7 +1,7 @@
 ---
 title: "keiROLE"
 date: "2026-06-28"
-tag: "个人站"
+tag: "项目"
 link: "https://keirole.pages.dev/"
 status: "active"
 tech: "Next.js 16, TypeScript, Tailwind CSS, WebGL"
