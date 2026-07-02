@@ -11,7 +11,7 @@ const FALLBACK_QUOTES = [
 ];
 
 export default function MingYanCard() {
-  const [quote, setQuote] = useState(FALLBACK_QUOTES[0]);
+  const [quote, setQuote] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [allQuotes, setAllQuotes] = useState<string[]>(FALLBACK_QUOTES);
 
@@ -25,6 +25,7 @@ export default function MingYanCard() {
           .filter((l) => l.length > 0);
         if (lines.length > 0) {
           setAllQuotes(lines);
+          setQuote(lines[0]);
         }
       })
       .catch(() => {})

@@ -48,7 +48,7 @@ export default function Sidebar() {
           className="text-xl font-bold px-2"
           style={{ color: "var(--accent)", marginBottom: "4px" }}
         >
-          keiROLE <span style={{ fontSize: "11px", opacity: 0.6, fontWeight: "normal" }}>v1.4</span>
+          keiROLE <span style={{ fontSize: "11px", opacity: 0.6, fontWeight: "normal" }}>v1.4.1</span>
         </div>
 
         {/* Navigation Card */}
