@@ -1,3 +1,4 @@
+I will not accept a life I do not deserve
 因为相信所以看见！先做一件事再论完美与否。
 宁愿做错，也不要什么都不做。
 命运会不断地给你相同的课题，直到你给出新的回应。
